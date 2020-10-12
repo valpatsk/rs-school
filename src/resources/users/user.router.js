@@ -2,6 +2,7 @@ const router = require('express').Router();
 const User = require('./user.model');
 
 const usersService = require('./user.service');
+const tasksService = require('../task/task.service');
 
 router.route('/').get(async (req, res) => {
   const users = await usersService.getAll();
@@ -34,6 +35,7 @@ router.route('/:id').delete(async (req, res) => {
   } catch (e) {
     res.status(404).send(e.message);
   }
+  await tasksService.unassignUser(req.params.id);
   res.sendStatus(200);
 });
 

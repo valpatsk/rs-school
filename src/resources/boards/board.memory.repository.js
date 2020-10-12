@@ -23,6 +23,7 @@ const remove = async id => {
   while (boards.length > 0) {
     BDB.push(boards.pop());
   }
+
   return true;
 };
 

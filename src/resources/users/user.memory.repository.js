@@ -1,4 +1,5 @@
 const { DB } = require('../../common/db');
+const { TDB } = require('../../common/db');
 
 const getAll = async () => {
   return DB;
@@ -23,6 +24,12 @@ const remove = async id => {
   while (users.length > 0) {
     DB.push(users.pop());
   }
+  const assigned_tasks = TDB.filter(el => el.userId === id);
+  console.log(assigned_tasks);
+  for (let i = 0; i < assigned_tasks.length; i++) {
+    assigned_tasks.userId = null;
+  }
+
   return true;
 };
 

@@ -8,8 +8,12 @@ router.route('/').get(async (req, res) => {
 });
 
 router.route('/:id').get(async (req, res) => {
-  const user = await usersService.get(req.params.id);
-  res.json(User.toResponse(user));
+  try {
+    const user = await usersService.get(req.params.id);
+    res.json(User.toResponse(user));
+  } catch (e) {
+    res.status(404).send(e.message);
+  }
 });
 
 router.route('/').post(async (req, res) => {
@@ -21,6 +25,24 @@ router.route('/').post(async (req, res) => {
     })
   );
   res.json(User.toResponse(user));
+});
+
+router.route('/:id').delete(async (req, res) => {
+  try {
+    await usersService.remove(req.params.id);
+  } catch (e) {
+    res.status(404).send(e.message);
+  }
+  res.sendStatus(200);
+});
+
+router.route('/:id').put(async (req, res) => {
+  try {
+    const user = await usersService.update(req.params.id, req.body);
+    res.json(User.toResponse(user));
+  } catch (e) {
+    res.status(404).send(e.message);
+  }
 });
 
 module.exports = router;

@@ -21,4 +21,10 @@ app.use('/', (req, res, next) => {
 
 app.use('/users', userRouter);
 
+app.use((err, req, res, next) => {
+  console.log(err.stack);
+  res.status(500).send('Error occured!');
+  next();
+});
+
 module.exports = app;

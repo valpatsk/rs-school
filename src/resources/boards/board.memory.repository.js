@@ -13,6 +13,7 @@ const get = async id => {
 };
 
 const remove = async id => {
+  console.log('border_rep_remove');
   const boards = BDB.filter(el => el.id !== id);
   if (boards.length === BDB.length) {
     throw new Error(`The board with ID: ${id} was not found.`);
@@ -23,7 +24,6 @@ const remove = async id => {
   while (boards.length > 0) {
     BDB.push(boards.pop());
   }
-
   return true;
 };
 

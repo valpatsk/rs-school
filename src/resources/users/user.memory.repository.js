@@ -25,11 +25,9 @@ const remove = async id => {
     DB.push(users.pop());
   }
   const assigned_tasks = TDB.filter(el => el.userId === id);
-  console.log(assigned_tasks);
   for (let i = 0; i < assigned_tasks.length; i++) {
     assigned_tasks.userId = null;
   }
-
   return true;
 };
 
@@ -48,7 +46,7 @@ const update = async (id, body) => {
   if (body.name) user.name = body.name;
   if (body.password) user.password = body.password;
 
-  return get(body.id);
+  return get(user.id);
 };
 
 module.exports = { getAll, get, create, remove, update };

@@ -1,4 +1,4 @@
-const DB = require('../../common/db');
+const { DB } = require('../../common/db');
 
 const getAll = async () => {
   return DB;

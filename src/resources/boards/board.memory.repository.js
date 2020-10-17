@@ -1,11 +1,12 @@
 const { BDB } = require('../../common/db');
+const { getBoardById } = require('../../common/db');
 
 const getAll = async () => {
   return BDB;
 };
 
 const get = async id => {
-  const board = BDB.filter(el => el.id === id)[0];
+  const board = await getBoardById(id);
   if (!board) {
     throw new Error(`The board with ID: ${id} was not found.`);
   }
@@ -13,21 +14,21 @@ const get = async id => {
 };
 
 const remove = async id => {
-  const boards = BDB.filter(el => el.id !== id);
+  const boards = await BDB.filter(el => el.id !== id);
   if (boards.length === BDB.length) {
     throw new Error(`The board with ID: ${id} was not found.`);
   }
   while (BDB.length > 0) {
-    BDB.pop();
+    await BDB.pop();
   }
   while (boards.length > 0) {
-    BDB.push(boards.pop());
+    await BDB.push(boards.pop());
   }
   return true;
 };
 
 const create = async board => {
-  BDB.push(board);
+  await BDB.push(board);
   return get(board.id);
 };
 

@@ -42,21 +42,21 @@ const remove = async (boardId, id) => {
 };
 
 const removeInBoard = async boardId => {
-  const tasksNotInBoard = TDB.filter(el => el.boardId !== boardId);
+  const tasksNotInBoard = await TDB.filter(el => el.boardId !== boardId);
   if (tasksNotInBoard.length === TDB.length) {
     return true;
   }
   while (TDB.length > 0) {
-    TDB.pop();
+    await TDB.pop();
   }
   while (tasksNotInBoard.length > 0) {
-    TDB.push(tasksNotInBoard.pop());
+    await TDB.push(tasksNotInBoard.pop());
   }
   return true;
 };
 
-const unassignUser = userId => {
-  const tasksInUser = TDB.filter(el => el.userId === userId);
+const unassignUser = async userId => {
+  const tasksInUser = await TDB.filter(el => el.userId === userId);
   for (let i = 0; i < tasksInUser.length; i++) {
     tasksInUser[i].userId = null;
   }
@@ -65,7 +65,7 @@ const unassignUser = userId => {
 
 const create = async (boardId, task) => {
   task.boardId = boardId; //! get from params, not from body!
-  TDB.push(task);
+  await TDB.push(task);
   return get(task.boardId, task.id);
 };
 

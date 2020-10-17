@@ -32,8 +32,8 @@ router.route('/').post(async (req, res) => {
 router.route('/:id').delete(async (req, res) => {
   try {
     await Promise.all([
-      usersService.remove(req.params.id),
-      tasksService.unassignUser(req.params.id)
+      await usersService.remove(req.params.id),
+      await tasksService.unassignUser(req.params.id)
     ]);
   } catch (e) {
     res.status(404).send(e.message);

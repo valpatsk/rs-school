@@ -25,7 +25,7 @@ app.use('/users', userRouter);
 
 app.use('/boards', boardRouter);
 
-app.use('/boards/:boardId/tasks', taskRouter);
+boardRouter.use('/:boardId/tasks', taskRouter);
 
 app.use((err, req, res, next) => {
   console.log(err.stack);

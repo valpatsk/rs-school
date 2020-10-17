@@ -30,15 +30,10 @@ router.route('/').post(async (req, res) => {
 
 router.route('/:id').delete(async (req, res) => {
   try {
-    await Promise.all([
-      boardsService.remove(req.params.id),
-      tasksService.removeInBoard(req.params.id)
+    Promise.all([
+      await boardsService.remove(req.params.id),
+      await tasksService.removeInBoard(req.params.id)
     ]);
-    /*
-    await boardsService
-      .remove(req.params.id)
-      .then(await tasksService.removeInBoard(req.params.id));
-      */
   } catch (e) {
     res.status(404).send(e.message);
   }

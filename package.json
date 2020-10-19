@@ -40,7 +40,12 @@
   },
   "lint-staged": {
     "*.js": [
-      
+      "git add"
+    ]
+  },
+  "lint-staged-old": {
+    "*.js": [
+      "npm run lint",
       "git add"
     ]
   },

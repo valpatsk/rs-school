@@ -1,4 +1,5 @@
 const winston = require('winston');
+const qs = require('qs');
 
 const config = {
   levels: {
@@ -41,7 +42,7 @@ const log = winston.createLogger({
 function requestInfo(req) {
   log.log(
     'info',
-    `${req.method}: ${req.originalUrl}, ${JSON.stringify(req.body)}`
+    `${req.method}: ${req.baseUrl}?${qs.stringify(req.query)} ${JSON.stringify(req.body)}`
   );
 }
 

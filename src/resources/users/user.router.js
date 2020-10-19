@@ -11,6 +11,7 @@ router.route('/').get(async (req, res, next) => {
   } catch (e) {
     res.status(404);
     next(e.message);
+    return;
   }
 });
 
@@ -21,6 +22,7 @@ router.route('/:id').get(async (req, res, next) => {
   } catch (e) {
     res.status(404);
     next(e.message);
+    return;
   }
 });
 
@@ -33,6 +35,7 @@ router.route('/').post(async (req, res, next) => {
     })
   );
   res.status(200).json(User.toResponse(user));
+  return;
 });
 
 router.route('/:id').delete(async (req, res, next) => {
@@ -44,19 +47,21 @@ router.route('/:id').delete(async (req, res, next) => {
   } catch (e) {
     res.status(404);
     next(e.message);
+    return;
   }
   res.sendStatus(200);
+  return;
 });
 
 router.route('/:id').put(async (req, res, next) => {
   try {
     const user = await usersService.update(req.params.id, req.body);
-    res.json(User.toResponse(user));
+    res.status(200).json(User.toResponse(user));
   } catch (e) {
     res.status(404);
     next(e.message);
+    return;
   }
-  res.sendStatus(200);
 });
 
 module.exports = router;

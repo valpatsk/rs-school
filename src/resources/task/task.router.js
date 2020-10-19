@@ -3,25 +3,27 @@ const Task = require('./task.model');
 
 const tasksService = require('./task.service');
 
-router.route('/').get(async (req, res) => {
+router.route('/').get(async (req, res, next) => {
   try {
     const tasks = await tasksService.getAll(req.params.boardId);
-    res.json(tasks);
+    res.status(200).json(tasks);
   } catch (e) {
-    res.status(404).send(e.message);
+    res.status(404);
+    next(e.message);
   }
 });
 
-router.route('/:id').get(async (req, res) => {
+router.route('/:id').get(async (req, res, next) => {
   try {
     const task = await tasksService.get(req.params.boardId, req.params.id);
-    res.json(task);
+    res.status(200).json(task);
   } catch (e) {
-    res.status(404).send(e.message);
+    res.status(404);
+    next(e.message);
   }
 });
 
-router.route('/').post(async (req, res) => {
+router.route('/').post(async (req, res, next) => {
   const task = await tasksService.create(
     req.params.boardId,
     new Task({
@@ -33,19 +35,20 @@ router.route('/').post(async (req, res) => {
       columnId: req.body.columnId
     })
   );
-  res.json(task);
+  res.status(200).json(task);
 });
 
-router.route('/:id').delete(async (req, res) => {
+router.route('/:id').delete(async (req, res, next) => {
   try {
     await tasksService.remove(req.params.boardId, req.params.id);
   } catch (e) {
-    res.status(404).send(e.message);
+    res.status(404);
+    next(e.message);
   }
   res.sendStatus(200);
 });
 
-router.route('/:id').put(async (req, res) => {
+router.route('/:id').put(async (req, res, next) => {
   try {
     const task = await tasksService.update(
       req.params.boardId,
@@ -54,7 +57,8 @@ router.route('/:id').put(async (req, res) => {
     );
     res.json(task);
   } catch (e) {
-    res.status(404).send(e.message);
+    res.status(404);
+    next(e.message);
   }
 });
 

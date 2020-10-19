@@ -4,6 +4,12 @@ const Board = require('./board.model');
 const boardsService = require('./board.service');
 const tasksService = require('../task/task.service');
 
+const logger = require('../../common/logger.js');
+
+router.all('*', async (req, res) => {
+  await logger.requestInfo(req, res);
+});
+
 router.route('/').get(async (req, res) => {
   const boards = await boardsService.getAll();
   res.json(boards);

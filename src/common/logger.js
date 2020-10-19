@@ -4,26 +4,36 @@ const config = {
   levels: {
     error: 0,
     warn: 1,
-    info: 2,
-    path: 3
+    info: 2
   },
   colors: {
     error: 'red',
     warn: 'yellow',
-    info: 'blue',
-    path: 'orange'
+    info: 'blue'
   }
 };
 
+winston.addColors(config.colors);
+
 const log = winston.createLogger({
   levels: config.levels,
-  format: winston.format.combine(winston.format.simple()),
+  format: winston.format.combine(
+    winston.format.simple(),
+    winston.format.colorize()
+  ),
   transports: [
     new winston.transports.Console({
-      format: winston.format.combine(winston.format.colorize({}))
+      format: winston.format.combine(
+        winston.format.simple(),
+        winston.format.colorize()
+      )
     }),
     new winston.transports.File({
-      filename: './log/log.log'
+      filename: './log/log.log',
+      format: winston.format.combine(
+        winston.format.simple(),
+        winston.format.uncolorize()
+      )
     })
   ]
 });
@@ -31,9 +41,7 @@ const log = winston.createLogger({
 function requestInfo(req) {
   log.log(
     'info',
-    `${req.method}: ${req.originalUrl}, ${JSON.stringify(
-      req.query
-    )}, ${JSON.stringify(req.body)}`
+    `${req.method}: ${req.originalUrl}, ${JSON.stringify(req.body)}`
   );
 }
 

@@ -23,7 +23,7 @@ app.use('/', (req, res, next) => {
 });
 
 // logging requests
-app.use(['/users', '/boards'], (req, res, next) => {
+app.use((req, res, next) => {
   logger.requestInfo(req, res);
   next();
 });

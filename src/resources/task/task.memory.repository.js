@@ -1,8 +1,8 @@
 const { TDB } = require('../../common/db');
-const { BDB } = require('../../common/db');
+const { getBoardById } = require('../../common/db');
 
 const getAll = async boardId => {
-  const board = BDB.filter(el => el.id === boardId)[0];
+  const board = getBoardById(boardId);
   if (!board) {
     throw new Error(`Board ${boardId} was not found.`);
   }
@@ -14,7 +14,7 @@ const getAll = async boardId => {
 };
 
 const get = async (boardId, id) => {
-  const board = BDB.filter(el => el.id === boardId)[0];
+  const board = getBoardById(boardId);
   if (!board) {
     throw new Error(`Board ${boardId} was not found.`);
   }

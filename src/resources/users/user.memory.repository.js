@@ -1,5 +1,12 @@
-const { DB } = require('../../common/db');
 const { TDB } = require('../../common/db');
+
+const {
+  getUserById,
+  getAllUsers,
+  removeUser,
+  createUser,
+  updateUser
+} = require('../../common/db');
 
 const getAll = async () => {
   return DB;

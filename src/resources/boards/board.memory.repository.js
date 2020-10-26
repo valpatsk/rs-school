@@ -1,47 +1,65 @@
-const { BDB } = require('../../common/db');
-const { getBoardById } = require('../../common/db');
+const {
+  getBoardById,
+  getAllBoards,
+  removeBoard,
+  createBoard,
+  updateBoard
+} = require('../../common/db');
 
 const getAll = async () => {
-  return BDB;
+  try {
+    const boards = await getAllBoards();
+    return boards;
+  } catch (e) {
+    throw new Error(`Can't get all Boards (${e.message}).`);
+  }
 };
 
 const get = async id => {
-  const board = await getBoardById(id);
-  if (!board) {
-    throw new Error(`The board with ID: ${id} was not found.`);
+  try {
+    const board = await getBoardById(id);
+    console.log(board);
+    if (!board) {
+      throw new Error(`The board with ID ${id} was not found.`);
+    }
+    return board;
+  } catch (e) {
+    throw new Error(`Can't get Board ${id} (${e.message}).`);
   }
-  return board;
 };
 
 const remove = async id => {
-  const boards = await BDB.filter(el => el.id !== id);
-  if (boards.length === BDB.length) {
-    throw new Error(`The board with ID: ${id} was not found.`);
+  try {
+    const result = await removeBoard(id);
+    if (result === false) {
+      throw new Error(`The board with ID ${id} was not deleted.`);
+    }
+    return true;
+  } catch (e) {
+    throw new Error(`Can't remove Board ${id} (${e.message}).`);
   }
-  while (BDB.length > 0) {
-    await BDB.pop();
-  }
-  while (boards.length > 0) {
-    await BDB.push(boards.pop());
-  }
-  return true;
 };
 
 const create = async board => {
-  await BDB.push(board);
-  return get(board.id);
+  try {
+    const newBoard = await createBoard(board);
+    // console.log(newBoard);
+    return newBoard;
+  } catch (e) {
+    throw new Error(`Can't create Board (${e.message}).`);
+  }
 };
 
 const update = async (id, body) => {
-  const board = await get(id);
-  if (!board) {
-    throw new Error(`The board with ID: ${id} was not found.`);
+  try {
+    const result = await updateBoard(id, body);
+    if (result === false) {
+      throw new Error(`The board with ID ${id} was not found.`);
+    }
+    return await get(id);
+  } catch (e) {
+    throw new Error(`Can't update Board ${id} (${e.message}).`);
   }
-  if (body.id) board.id = body.id;
-  if (body.title) board.title = body.title;
-  if (body.columns) board.columns = body.columns;
-
-  return get(body.id);
 };
 
 module.exports = { getAll, get, create, remove, update };

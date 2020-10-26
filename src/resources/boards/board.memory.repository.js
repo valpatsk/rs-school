@@ -18,7 +18,6 @@ const getAll = async () => {
 const get = async id => {
   try {
     const board = await getBoardById(id);
-    console.log(board);
     if (!board) {
       throw new Error(`The board with ID ${id} was not found.`);
     }

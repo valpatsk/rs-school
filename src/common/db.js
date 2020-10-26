@@ -1,6 +1,6 @@
 const User = require('../resources/users/user.model');
 const Board = require('../resources/boards/board.model');
-// const Task = require('../resources/task/task.model');
+const Task = require('../resources/task/task.model');
 require('dotenv').config();
 
 const connectToDB = callBack => {
@@ -20,8 +20,6 @@ const connectToDB = callBack => {
     callBack();
   });
 };
-
-const TDB = [];
 
 // Boards
 async function getAllBoards() {
@@ -45,7 +43,7 @@ async function updateBoard(board_id, body) {
   if (result.nModified === 0) {
     return false;
   }
-  return Board.findOne({ id: board_id });
+  return true;
 }
 // Users
 async function getAllUsers() {
@@ -69,11 +67,47 @@ async function updateUser(user_id, body) {
   if (result.nModified === 0) {
     return false;
   }
-  return Board.findOne({ id: user_id });
+  return true;
+}
+
+// tasks
+async function getAllTasks(board_id) {
+  const query = Task.find({ boardId: board_id });
+  const res = await query.exec();
+  return res;
+}
+async function getTaskById(board_id, task_id) {
+  return Task.findOne({ boardId: board_id, id: task_id }).exec();
+}
+async function removeTask(board_id, task_id) {
+  const result = await Task.deleteOne({ id: task_id, boardId: board_id });
+  if (result.deletedCount === 0) {
+    return false;
+  }
+  return true;
+}
+async function createTask(board_id, task) {
+  task.boardId = board_id; //! get from params, not from body!
+  return await Task.create(task);
+}
+async function updateTask(board_id, task_id, body) {
+  body.boardId = board_id; //! get from params, not from body!
+  const result = await Task.updateOne({ boardId: board_id, id: task_id }, body);
+  if (result.nModified === 0) {
+    return false;
+  }
+  return true;
+}
+
+// common
+async function removeTasksInBoard(board_id) {
+  const res = await Task.deleteMany({ boardId: board_id });
+}
+async function unassignUserOnDelete(user_id) {
+  const res = await Task.updateMany({ userId: user_id }, { userId: null });
 }
 
 module.exports = {
-  TDB,
   connectToDB,
   getBoardById,
   getAllBoards,
@@ -84,5 +118,12 @@ module.exports = {
   getAllUsers,
   removeUser,
   createUser,
-  updateUser
+  updateUser,
+  getTaskById,
+  getAllTasks,
+  removeTask,
+  createTask,
+  updateTask,
+  removeTasksInBoard,
+  unassignUserOnDelete
 };

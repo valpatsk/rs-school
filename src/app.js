@@ -35,7 +35,7 @@ app.use('/boards', boardRouter);
 boardRouter.use('/:boardId/tasks', taskRouter);
 
 // common error logging
-app.use((err, req, res, next) => {
+app.use((err, req, res) => {
   logger.error('EXPRESS ERROR', err);
   res.status(res.statusCode).send(err);
   return;

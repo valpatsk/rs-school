@@ -26,7 +26,7 @@ router.route('/:id').get(async (req, res, next) => {
   }
 });
 
-router.route('/').post(async (req, res, next) => {
+router.route('/').post(async (req, res) => {
   const board = await boardsService.create(
     new Board({
       title: req.body.title,

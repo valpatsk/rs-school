@@ -2,6 +2,7 @@ const User = require('../resources/users/user.model');
 const Board = require('../resources/boards/board.model');
 const Task = require('../resources/task/task.model');
 require('dotenv').config();
+const bcrypt = require('bcrypt');
 
 const connectToDB = callBack => {
   const mongoose = require('mongoose');
@@ -15,6 +16,11 @@ const connectToDB = callBack => {
   db.once('open', () => {
     console.log('Connected to MongoDB');
     db.dropDatabase();
+    createUser({
+      name: 'Valery Patskevich',
+      login: 'admin',
+      password: bcrypt.hashSync('admin', 10)
+    });
     const test_board = new Board({ title: 'TESTBOARD' });
     test_board.save();
     callBack();
@@ -98,6 +104,10 @@ async function updateTask(board_id, task_id, body) {
   }
   return true;
 }
+// login
+async function checkUserByLogin(login) {
+  return User.findOne({ login }).exec();
+}
 
 // common
 async function removeTasksInBoard(board_id) {
@@ -106,7 +116,6 @@ async function removeTasksInBoard(board_id) {
 async function unassignUserOnDelete(user_id) {
   const res = await Task.updateMany({ userId: user_id }, { userId: null });
 }
-
 module.exports = {
   connectToDB,
   getBoardById,
@@ -125,5 +134,6 @@ module.exports = {
   createTask,
   updateTask,
   removeTasksInBoard,
-  unassignUserOnDelete
+  unassignUserOnDelete,
+  checkUserByLogin
 };

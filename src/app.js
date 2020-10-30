@@ -40,7 +40,7 @@ app.all('*', (req, res, next) => {
   }
   */
   if (req.get('Authorization') !== undefined) {
-    const token = req.get('Authorization').slice(7);
+    const token = req.headers.authorization.slice(7);
     const decoded = auth.decodeToken(token);
     if (typeof decoded === 'string') {
       res.status(401).send(`Please send correct jwt token. ${decoded}`);

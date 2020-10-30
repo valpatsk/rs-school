@@ -60,7 +60,7 @@ app.use('/boards', boardRouter);
 boardRouter.use('/:boardId/tasks', taskRouter);
 
 // common error logging
-app.use((err, req, res) => {
+app.use((err, req, res, next) => {
   logger.error('EXPRESS ERROR', err);
   res.status(res.statusCode).send(err);
   return;

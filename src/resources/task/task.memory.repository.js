@@ -1,107 +1,5 @@
-const {
-  getBoardById,
-  getAllTasks,
-  getTaskById,
-  removeTask,
-  createTask,
-  updateTask,
-  removeTasksInBoard,
-  unassignUserOnDelete
-} = require('../../common/db');
-
-const getAll = async boardId => {
-  const board = getBoardById(boardId);
-  if (!board) {
-    throw new Error(`Board ${boardId} was not found.`);
-  }
-  try {
-    const tasks = await getAllTasks(boardId);
-    return tasks;
-  } catch (e) {
-    throw new Error(`Can't get all Tasks (${e.message}).`);
-  }
-};
-
-const get = async (boardId, id) => {
-  const board = getBoardById(boardId);
-  if (!board) {
-    throw new Error(`Board ${boardId} was not found.`);
-  }
-  try {
-    const task = await getTaskById(boardId, id);
-    if (!task) {
-      throw new Error(`The task with ID ${id} was not found.`);
-    }
-    return task;
-  } catch (e) {
-    throw new Error(`Can't get task ${id} (${e.message}).`);
-  }
-};
-
-const remove = async (boardId, id) => {
-  const board = getBoardById(boardId);
-  if (!board) {
-    throw new Error(`Board ${boardId} was not found.`);
-  }
-  try {
-    const result = await removeTask(boardId, id);
-    if (result === false) {
-      throw new Error(`The task with ID ${id} was not deleted.`);
-    }
-    return true;
-  } catch (e) {
-    throw new Error(`Can't remove task ${id} (${e.message}).`);
-  }
-};
-
-const create = async (boardId, task) => {
-  const board = getBoardById(boardId);
-  if (!board) {
-    throw new Error(`Board ${boardId} was not found.`);
-  }
-  try {
-    const newTask = await createTask(boardId, task);
-    return newTask;
-  } catch (e) {
-    throw new Error(`Can't create task (${e.message}).`);
-  }
-};
-
-const update = async (boardId, id, body) => {
-  const board = getBoardById(boardId);
-  if (!board) {
-    throw new Error(`Board ${boardId} was not found.`);
-  }
-  try {
-    const result = await updateTask(boardId, id, body);
-    if (result === false) {
-      throw new Error(`The task with ID ${id} was not found.`);
-    }
-    return await get(boardId, id);
-  } catch (e) {
-    throw new Error(`Can't update task ${id} (${e.message}).`);
-  }
-};
-
-const removeInBoard = async boardId => {
-  return await removeTasksInBoard(boardId);
-};
-
-const unassignUser = async userId => {
-  return await unassignUserOnDelete(userId);
-};
-
-module.exports = {
-  getAll,
-  get,
-  create,
-  remove,
-  update,
-  removeInBoard,
-  unassignUser
-};
-
-/*
+const { TDB } = require('../../common/db');
+const { getBoardById } = require('../../common/db');
 
 const getAll = async boardId => {
   const board = getBoardById(boardId);
@@ -187,4 +85,13 @@ const update = async (boardId, id, body) => {
 
   return get(task.boardId, task.id);
 };
-*/
+
+module.exports = {
+  getAll,
+  get,
+  create,
+  remove,
+  update,
+  removeInBoard,
+  unassignUser
+};

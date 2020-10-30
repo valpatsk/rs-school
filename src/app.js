@@ -5,9 +5,7 @@ const YAML = require('yamljs');
 const userRouter = require('./resources/users/user.router');
 const boardRouter = require('./resources/boards/board.router');
 const taskRouter = require('./resources/task/task.router');
-const loginRouter = require('./resources/login/login.router');
 const logger = require('./common/logger.js');
-const auth = require('./common/auth.js');
 
 const app = express();
 const swaggerDocument = YAML.load(path.join(__dirname, '../doc/api.yaml'));
@@ -27,32 +25,6 @@ app.use('/', (req, res, next) => {
 // logging requests
 app.use((req, res, next) => {
   logger.requestInfo(req, res);
-  next();
-});
-
-app.use('/login', loginRouter);
-
-app.all('*', (req, res, next) => {
-  /*
-  if (req.originalUrl === '/users' && req.method === 'POST') {
-    next();
-    return;
-  }
-  */
-  console.log(req.get('Authorization'));
-  if (req.get('Authorization') !== undefined) {
-    const token = req.get('Authorization').slice(7);
-    console.log(token);
-    const decoded = auth.decodeToken(token);
-    console.log(decoded);
-    if (typeof decoded === 'string') {
-      res.status(401).send(`Please send correct jwt token. ${decoded}`);
-      return;
-    }
-  } else {
-    res.status(401).send('Please Login');
-    return;
-  }
   next();
 });
 
